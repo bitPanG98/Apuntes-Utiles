@@ -1,0 +1,2 @@
+<--> Programar, es el arte de manipular datos, con el proposito de dar solucion a un problema. <-->
+Esto se lleva a cabo haciendo uso de lenguajes de programacion, los cuales nos van a permitir poder desarrollar programas que al final el computador lo va a entender.
