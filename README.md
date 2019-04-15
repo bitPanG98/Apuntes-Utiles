@@ -1,2 +1,2 @@
 # ApuntesSobreProgramacion
-Apuntes con todo lo referente al mundo d ela programacion.
+Apuntes con todo lo referente al mundo de la programacion.
