@@ -1,0 +1,3 @@
+Proyecto, en un conjunto de actividades coordinadas o interrelacioandas entre si que son controladas con una fecha de inicio y de 
+finalización, las cuales seran llevadas a cabo para alcanzar un objetivo o la satisfaccion de una necesidad, conforme con requisitos 
+y requerimientos específicos, incluyendo tambien las limitaciones de tiempo, coste y recursos(ISO 10006,).
