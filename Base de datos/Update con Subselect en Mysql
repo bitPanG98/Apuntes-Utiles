@@ -1,0 +1,68 @@
+//https://www.damianculotta.com.ar/bases-de-datos/update-con-subselect-en-mysql/#more-616
+
+Es posible que en algunas oportunidades necesitemos hacer una actualización a una tabla en donde la clave a utilizar en el where nos sea desconocida, y que sólo podamos obtenerla partiendo de una segunda clave en una segunda tabla.
+
+El truco para esto es utilizar subconsultas.
+
+Lo más probable es que al pensar en esto, escriban un ejemplo como el siguiente:
+
+<code>
+UPDATE
+  tabla1
+SET
+  campo = 'nuevo_valor'
+WHERE
+  campo_de_referencia = (
+    SELECT
+      tabla1.valor
+    FROM
+      tabla1,
+      tabla2
+    WHERE
+      tabla1.campo = 'viejo_valor'
+      AND
+      tabla1.clave_primaria = tabla2.clave_foranea
+      AND
+      tabla2.campo_de_referencia = 'otro_valor'
+  )
+;
+</code>
+
+Lamentablemente, esto no va a funcionar y van a obtener el siguiente error.
+
+>>You can't specify target table 'tabla1' for update in FROM clause
+
+Esto se debe a que como restricción, no puede actualizarse una tabla y al mismo tiempo hacer una consulta sobre si misma.
+
+¿Cuál es la solución entonces?, utilizar un alias para la subconsulta.
+
+
+<code>
+UPDATE
+  tabla1
+SET
+  campo = 'nuevo_valor'
+WHERE
+  campo_de_referencia = (
+    SELECT
+      valor
+    FROM
+      (
+        SELECT
+          tabla1.valor
+        FROM
+          tabla1,
+          tabla2
+        WHERE
+          tabla1.campo = 'viejo_valor'
+          AND
+          tabla1.clave_primaria = tabla2.clave_foranea
+          AND
+          tabla2.campo_de_referencia = 'otro_valor'
+      )
+    AS alias_tabla1
+  )
+;
+</code>
+
+Ahora si, nuestra subconsulta queda encerrada en un alias, y ese alias es el que se aplica para la subconsulta en el update.
