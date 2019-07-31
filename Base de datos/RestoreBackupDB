@@ -1,0 +1,43 @@
+Restaurar backups de Mysql
+En ésta oportunidad, vamos a ver cómo restaurar una base de datos en Mysql. Además, algunas aclaraciones sobre el uso de mysqldump que pueden ayudarnos con las restauraciones de bases de datos.
+
+La forma de restaurar una base de datos Mysql desde la consola, tomando un backup, sería asi.
+
+mysql -u usuario -p basededatos < basededatos.sql
+El escenario que estoy suponiendo, implica que la base de datos que están queriendo importar no existe en su servidor Mysql.
+
+Si este supuesto es correcto, se van a encontrar con un problemita, o mejor dicho, con un mensaje al ejecutar el comando.
+
+ERROR 1049 (42000): Unknown database 'basededatos'
+Esto se debe a la inexistencia de la base dentro de nuestro Mysql.
+
+
+Tenemos dos maneras de resolver ésta situación.
+
+Editar el archivo sql y agregarle a mano los comandos necesarios para la creación de la base.
+Agregar dos parámetros a nuestro comando mysqldump.
+En el primer caso, deberíamos agregar a nuestro archivo, las siguientes instrucciones.
+
+CREATE DATABASE basededatos;
+USE DATABASE basededatos;
+Con esto, el script funcionaría correctamente. Lo malo de ésta forma, es que si tenemos backups muy muy pesados, puede resultar algo engorroso estar editándolos.
+
+Para evitarnos este paso, vamos a cambiar la forma de ejecutar mysqldump.
+
+Lo habitual y más simple para hacer el backup sería ejecutar el comando de ésta forma.
+
+mysqldump -hhost -uusuario -ppassword basededatos > basededatos.sql
+Como ya dije, esto no nos funcionará correctamente. Así que vamos a sumar algunos parámetros para estar más tranquilos.
+
+Los parámetros en cuestión son:
+
+databases
+add-drop-database
+Con databases mysqldump agregará automáticamente las instrucciones de creación y uso de base de datos.
+
+Ahora bien, podría darse que por algún motivo, la base de datos existiera. Para evitar el conflicto, es que agregamos add-drop-database. Con esto, nos garantizamos que se agregue la instrucción de dropeo de la base de datos antes de la instrucción de creación de la misma.
+
+Nuestro nuevo dump se ejecutaría asi.
+
+mysqldump --add-drop-database --databases -hhost -uusuario -ppassword basededatos > basededatos.sql
+Ahora si, cuando volvamos a ejecutar la restauración, nuestra base de datos debería quedar restaurada sin problema alguno.
