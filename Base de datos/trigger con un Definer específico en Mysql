@@ -1,0 +1,22 @@
+Normalmente, cuando se trabaja en entornos de desarrollo locales, se suele dejar al usuario con mayor privilegio y con eso aguantamos hasta el momento de pasar a producción.
+
+Es en ese pasaje cuando descubrimos que el usuario que tenemos asignado está totalmente restringido sólo a nuestra base de datos, y hay ciertas operaciones que pueden resultar imposibles de resolver.
+
+Un escenario posible seria al intentar crear un trigger, obtengamos un error por falta de privilegios.
+
+Si además de éste usuario, podemos acceder a uno con privilegios más elevados (el usuario root es el habitual), podríamos crear el trigger.
+
+Esto tampoco nos va a servir, porque cuando el usuario sin privilegios quiere ejecutar el trigger, le será negada la operación ya que el propietario del trigger es quien lo creó (en este coloquial ejemplo, sería propiedad del usuario root).
+
+
+Ahora bien, la forma de poder crear un trigger pero asignándole un propietario que no se corresponde con el usuario que esté ejecutando, seria la siguiente:
+
+CREATE DEFINER = 'usuario'@'host' TRIGGER mi_trigger BEFORE INSERT ON mi_tabla
+  FOR EACH ROW BEGIN
+ 
+  /* El código que tengamos que usar */
+ 
+END;
+De ésta forma, al crearlo con el usuario con privilegios, vamos a poder ejecutar la sentencia de creación del trigger y éste va a estar disponible para el usuario restringido que le indiquemos.
+
+(Más que post esto parece un post-it)
